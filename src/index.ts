@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: '.env' });
 import bodyParser from "body-parser";
 const app = express();
+import { Request, Response} from 'express';
 
 
 app.use(express.json());
@@ -18,7 +19,7 @@ app.use(
 );
 //   res.set("Access-Control-Allow-Origin", process.env.FRONT_URL);
 
-app.get("/", (req:any, res:any) => {
+app.get("/", (req:Request, res:Response) => {
   res
     .status(200)
     .send(

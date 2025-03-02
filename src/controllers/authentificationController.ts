@@ -2,7 +2,8 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import conn from "../data/connector/connect";
 import jwt from "jsonwebtoken";
-import winston from "winston";
+import logger from '../middleware/loggerWinston'
+import { Request, Response} from 'express';
 
 dotenv.config({ path: ".env" });
 
@@ -10,11 +11,11 @@ if (!process.env.JWT_SECRET_KEY) {
   throw new Error("JWT_SECRET_KEY is not defined in environment variables.");
 }
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
-const test = async (req:any, res:any) => {
+const test = async (req:Request, res:Response): Promise<any> => {
   return res.status(200).json({ message: "coucou" });
 };
 
-const register = async (req:any, res:any) => {
+const register = async (req:Request, res:Response) => {
 //   res.set("Access-Control-Allow-Origin", "http://localhost:3001");
   try {
     const newuser = {
@@ -32,6 +33,7 @@ const register = async (req:any, res:any) => {
       newuser.email,
       newuser.hash,
     ]);
+    //logger.trace('trace!');
     console.log("result");
     console.log(result);
     //console.log("req.body");
@@ -48,18 +50,21 @@ const register = async (req:any, res:any) => {
       message: "Utilisateur inscrit avec succès.",
     });
   } catch (error:any) {
+    
     if (error.code == "ER_DUP_ENTRY") {
+      logger.warn('Compte déjà connu');
       res
         .status(500)
         .json({ error: "Un compte existe déjà avec cette adresse mail" });
     } else {
+      logger.debug('Erreur Serveur');
       res.status(500).json({ error: "Erreur API lors de l’inscription." });
     }
   }
   // return res.status(200).json({message: 'User creation success'})
 };
 
-const login = async (req:any,res:any) =>{
+const login = async (req:Request, res:Response) : Promise<any> => {
 try {
       const user = {
         email: req.body.email,
@@ -74,17 +79,18 @@ try {
 
       
       if (result.length === 0) {
+        logger.warn('Utilisateur inconnu');
         return res.status(400).json({ message: "Utilisateur inconnu" });
       } else {
         const mdpHash = result[0].uti_mot_de_passe;
 
         bcrypt.compare(user.mdp, mdpHash, (err, isMatch) => {
           if (err) {
-            console.log("Erreur lors du mdp : ", err);
+            logger.warn('Erreur serveur lors de la validation du mot de passe');
             return res.status(500).json({ message: "Erreur survenue" });
           }
           if (!isMatch) {
-            console.log("mdp incorrect");
+            logger.warn('Mdp incorrect');
             return res.status(403).json({message: 'Mot de passe incorrect'})
           }
           
@@ -98,17 +104,14 @@ try {
       }
   
     } catch (error) {
-      console.error(error);
-      
+      logger.debug('Erreur Serveur');
       res.status(500).json({ error: "Erreur API lors de l’inscription." });
     }
-    
-   /* const logger = winston.createLogger({
-        level: 'info',
-        format: winston.format.json(),
 
-    })*/
+    
 
 }
-
-export { test, register, login };
+const token = async (req:Request, res: Response) => {
+      
+    }
+export { test, register, login, token };
