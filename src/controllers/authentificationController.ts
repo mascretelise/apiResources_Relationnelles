@@ -4,6 +4,8 @@ import conn from "../data/connector/connect";
 import jwt from "jsonwebtoken";
 import logger from '../middleware/loggerWinston'
 import { Request, Response} from 'express';
+import * as userAccessor from "../data/accessor/userAccessor"
+import {User} from "../data/models/user"
 
 dotenv.config({ path: ".env" });
 
@@ -25,21 +27,14 @@ const register = async (req:Request, res:Response) => {
       hash: await bcrypt.hash(req.body.mdp, 10),
     };
 
-    const insertQuery =
-      "INSERT INTO utilisateurs (uti_nom, uti_prenom, uti_email, uti_mot_de_passe, uti_statut,uti_suspendu) VALUES (?, ?, ?, ?, 1,1)";
-    const result = await conn.execute(insertQuery, [
-      newuser.lastName,
-      newuser.firstName,
-      newuser.email,
-      newuser.hash,
-    ]);
+    const createuser = await userAccessor.createUser(newuser);
     //logger.trace('trace!');
-    console.log("result");
+    /*console.log("result");
     console.log(result);
     //console.log("req.body");
     //console.log(req.body);
     console.log("result.warningStatus : ");
-    console.log(result.warningStatus);
+    console.log(result.warningStatus);*/
     const expireIn = 24 * 60 * 60;
     
     const token = jwt.sign({ userId: newuser }, jwtSecretKey, {
@@ -65,43 +60,26 @@ const register = async (req:Request, res:Response) => {
 };
 
 const login = async (req:Request, res:Response) : Promise<any> => {
+  
 try {
-      const user = {
-        email: req.body.email,
-        mdp: req.body.mdp,
-      };
-     
+      const { email, mdp } = req.body
+
+      const result = await userAccessor.loginUser(email)
+      console.log("🔍 Vérification du mot de passe...");
+      const mdpCompare = await userAccessor.compareMdp(mdp, email);
       
-      const request =
-        "SELECT uti_email, uti_mot_de_passe FROM utilisateurs WHERE uti_email=? ";
 
-      const result = await conn.execute(request, [user.email]);
-
-      
-      if (result.length === 0) {
-        logger.warn('Utilisateur inconnu');
-        return res.status(400).json({ message: "Utilisateur inconnu" });
-      } else {
-        const mdpHash = result[0].uti_mot_de_passe;
-
-        bcrypt.compare(user.mdp, mdpHash, (err, isMatch) => {
-          if (err) {
-            logger.warn('Erreur serveur lors de la validation du mot de passe');
-            return res.status(500).json({ message: "Erreur survenue" });
-          }
-          if (!isMatch) {
-            logger.warn('Mdp incorrect');
-            return res.status(403).json({message: 'Mot de passe incorrect'})
-          }
-          
-          const token = jwt.sign({userId: user.email}, jwtSecretKey, {expiresIn: '24h'})
-         
-          res.header('Authorization', 'Bearer ' + token);
-          
-          return res.status(200).json({message: "token envoyé"});
-         
-        });
+      if (!mdpCompare) {
+        return res.status(401).json({ message: "Email ou mot de passe incorrect" });
       }
+     console.log("salut")
+          
+      const token = jwt.sign({userId: email}, jwtSecretKey, {expiresIn: '24h'})
+      
+      res.header('Authorization', 'Bearer ' + token);
+      
+      return res.status(200).json({message: "token envoyé"});
+        
   
     } catch (error) {
       logger.debug('Erreur Serveur');
@@ -111,7 +89,5 @@ try {
     
 
 }
-const token = async (req:Request, res: Response) => {
-      
-    }
-export { test, register, login, token };
+
+export { test, register, login };
