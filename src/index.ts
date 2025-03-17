@@ -5,14 +5,16 @@ dotenv.config({ path: '.env' });
 import bodyParser from "body-parser";
 const app = express();
 import { Request, Response} from 'express';
+import cookieParser from "cookie-parser";
 
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: process.env.FRONT_URL,
+    credentials: true,
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
   })
