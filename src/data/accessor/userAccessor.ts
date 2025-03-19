@@ -2,13 +2,12 @@ import {User} from "../models/user"
 import conn from "../connector/connect";
 import bcrypt from "bcrypt";
 require("dotenv").config();
-import { SessionOptions } from "iron-session";
 
 
 
 export async function createUser(newuser: { lastName: any; firstName: any; email: any; hash: string; }): Promise<User> {
     const insertQuery =
-      "INSERT INTO utilisateurs (uti_nom, uti_prenom, uti_email, uti_mot_de_passe, uti_statut,uti_suspendu) VALUES (?, ?, ?, ?, 1,1)";
+      "INSERT INTO utilisateurs (uti_nom, uti_prenom, uti_email, uti_password, uti_statut,uti_suspendu) VALUES (?, ?, ?, ?, 1,1)";
     const result = await conn.execute(insertQuery, [
       newuser.lastName,
       newuser.firstName,
@@ -22,21 +21,21 @@ export async function loginUser (email: string): Promise<any>{
     const result = await getUserByEmail(email)
     return result;
 }
-// comparer le mot de passe dans une autre fonction
+
 export async function compareMdp (mdp: string, email: string): Promise<boolean>{
     let mdpHash = await getUserByEmail(email)
-    if (!mdpHash.uti_mot_de_passe) {
+    console.log("mdp Hash : ", mdpHash)
+    if (!mdpHash.uti_password) {
         return false;
     }
     
-    const match = await bcrypt.compare(mdp, mdpHash.uti_mot_de_passe);
-console.log("email, mdp : ", match)
+    const match = await bcrypt.compare(mdp, mdpHash.uti_password);
     return match;
 
 }
 
 export async function getUserByEmail(email: any): Promise<any>{
-    const request = "SELECT uti_email, uti_mot_de_passe FROM utilisateurs WHERE uti_email=?";
+    const request = "SELECT  uti_email, uti_password FROM utilisateurs WHERE uti_email=?";
     
     try {
         const [rows] = await conn.execute(request, [email]);
@@ -44,9 +43,27 @@ export async function getUserByEmail(email: any): Promise<any>{
         if (rows.length === 0) {
             return null;
         }
-        
         return rows;
     } catch (error) {
         throw new Error("Erreur lors de la récupération de l'utilisateur");
     }
+
+}
+export async function getStatutUser(email: any): Promise<any>{
+    const request = "SELECT uti_statut FROM utilisateurs WHERE uti_email=?";
+    const rows = await conn.execute(request, [email])
+    if(rows === 0){
+        return null
+    }
+    console.log(rows)
+    return rows[0]
+}
+
+export async function getInfos(email: any): Promise<User>{
+    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password FROM utilisateurs WHERE uti_email=?";
+    const result = await conn.execute(request, [email])
+    if(result.length ===0){
+        null
+    }
+    return result
 }

@@ -10,14 +10,13 @@ import * as userAccessor from "../data/accessor/userAccessor"
 dotenv.config({ path: ".env" });
 declare module "express-serve-static-core" {
   interface Request {
-      user?: any; // Remplace `any` par un type précis si possible
+      user?: any;
   }
 }
 if (!process.env.JWT_SECRET_KEY) {
   throw new Error("JWT_SECRET_KEY is not defined in environment variables.");
 }
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
-console.log("JWT_SECRET_KEY:", process.env.JWT_SECRET_KEY);
 const test = async (req:Request, res:Response): Promise<any> => {
   return res.status(200).json({ message: "coucou" });
 };
@@ -74,21 +73,25 @@ const login = async (req:Request, res:Response) : Promise<any> => {
   
 try {
       const { email, mdp } = req.body
-      
 
       const result = await userAccessor.loginUser(email)
       const mdpCompare = await userAccessor.compareMdp(mdp, email);
+      console.log("result : ", result)
+      console.log("mdp compare : ", mdpCompare)
       
       if (!mdpCompare || !result) {
         return res.status(401).json({ message: "Email ou mot de passe incorrect" });
       }
-      const user = { email };
-      const token = jwt.sign(user, jwtSecretKey, { expiresIn: "1h" });
+      const user = {email}
+      console.log("user : ", user)
+      const token = jwt.sign(user, jwtSecretKey);
       
       res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production", 
+          maxAge: 86400
       });
+      console.log("user co")
       return res.status(200).json({message: "utilisateur connecté"})
 
     } catch (error) {
@@ -111,4 +114,9 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({message: "Accès autorisé"})
 };
 
+/*const infosUser = () => {
+  
+  const infos = userAccessor.getUserByEmail(email)
+}
+*/
 export { test, register, login, verifyToken};
