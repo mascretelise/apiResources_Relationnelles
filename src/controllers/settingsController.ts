@@ -1,4 +1,4 @@
-/*import dotenv from "dotenv";
+import dotenv from "dotenv";
 import { Request, Response, NextFunction } from "express";
 import * as userAccessor from "../data/accessor/userAccessor"
 
@@ -13,4 +13,4 @@ const getInfos = async (req: Request, res:Response)=> {
     res.status(200).json(result)
 }
 
-export {getInfos}*/
+export {getInfos}

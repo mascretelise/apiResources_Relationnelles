@@ -51,7 +51,13 @@ export async function getUserByEmail(email: any): Promise<any>{
     }
 
 }
-/*export async function getStatutUser(email: any): Promise<any>{
+
+/*export function getStatutUser(email: string ) {
+    const request = "SELECT  uti_email FROM utilisateurs WHERE uti_email=?";
+    
+    throw new Error("Function not implemented.");
+}*/
+export async function getStatutUser(email: any): Promise<any>{
     const request = "SELECT uti_statut FROM utilisateurs WHERE uti_email=?";
     const rows = await conn.execute(request, [email])
     if(rows === 0){
@@ -61,12 +67,11 @@ export async function getUserByEmail(email: any): Promise<any>{
     return rows[0]
 }
 
-export async function getInfos(req:Request): Promise<User>{
-    const token = req.cookies.token;
-    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password FROM utilisateurs";
-    const result = await conn.execute(request)
+export async function getInfos(email: any): Promise<User>{
+    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password FROM utilisateurs WHERE uti_email=?";
+    const result = await conn.execute(request, [email])
     if(result.length ===0){
         null
     }
     return result
-}*/
+}
