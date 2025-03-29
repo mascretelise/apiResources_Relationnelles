@@ -1,13 +1,15 @@
 import {User} from "../models/user"
 import conn from "../connector/connect";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 require("dotenv").config();
 
 
 
 export async function createUser(newuser: { lastName: any; firstName: any; email: any; hash: string; }): Promise<User> {
     const insertQuery =
-      "INSERT INTO utilisateurs (uti_nom, uti_prenom, uti_email, uti_password, uti_statut,uti_suspendu) VALUES (?, ?, ?, ?, 1,1)";
+      "INSERT INTO utilisateurs (uti_name, uti_firstname, uti_email, uti_password, uti_statut,uti_suspendu) VALUES (?, ?, ?, ?, 1,1)";
     const result = await conn.execute(insertQuery, [
       newuser.lastName,
       newuser.firstName,
@@ -49,7 +51,7 @@ export async function getUserByEmail(email: any): Promise<any>{
     }
 
 }
-export async function getStatutUser(email: any): Promise<any>{
+/*export async function getStatutUser(email: any): Promise<any>{
     const request = "SELECT uti_statut FROM utilisateurs WHERE uti_email=?";
     const rows = await conn.execute(request, [email])
     if(rows === 0){
@@ -59,11 +61,12 @@ export async function getStatutUser(email: any): Promise<any>{
     return rows[0]
 }
 
-export async function getInfos(email: any): Promise<User>{
-    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password FROM utilisateurs WHERE uti_email=?";
-    const result = await conn.execute(request, [email])
+export async function getInfos(req:Request): Promise<User>{
+    const token = req.cookies.token;
+    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password FROM utilisateurs";
+    const result = await conn.execute(request)
     if(result.length ===0){
         null
     }
     return result
-}
+}*/

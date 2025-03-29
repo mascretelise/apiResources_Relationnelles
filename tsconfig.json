@@ -19,6 +19,10 @@
         "~~/*": ["./*"]
       }
     },
+    "include": [
+    "src/swagger-output.json",
+    "src/**/*"
+    ],
     "ts-node": {
       "require": ["tsconfig-paths/register"]
     }

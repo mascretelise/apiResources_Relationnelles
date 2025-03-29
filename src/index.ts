@@ -6,6 +6,9 @@ import bodyParser from "body-parser";
 const app = express();
 import { Request, Response} from 'express';
 import cookieParser from "cookie-parser";
+import { setupSwagger } from "../swagger";
+
+
 
 app.use(cookieParser());
 app.use(express.json());
@@ -39,5 +42,6 @@ import authentificationRoutes from "./routes/authentificationRoute";
 
 app.use("/api", authentificationRoutes);
 // app.use("/api/user", userRoutes);
+setupSwagger(app);
 
 export default app;
