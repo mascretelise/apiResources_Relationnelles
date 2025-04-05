@@ -83,16 +83,16 @@ try {
       if (!mdpCompare || !result) {
         return res.status(401).json({ message: "Email ou mot de passe incorrect" });
       }
-      const user = {email}
-      console.log("user : ", user)
-      const token = jwt.sign(user, jwtSecretKey);
+      //passer l'id 
+      const payload = {"email" : email}
+      console.log("user : ", payload)
+      const token = jwt.sign(payload, jwtSecretKey);
       
       res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production", 
-          maxAge: 86400
+          maxAge: 24 * 60 * 60 * 1000
       });
-      console.log("user co")
       return res.status(200).json({message: "utilisateur connecté"})
 
     } catch (error) {

@@ -73,5 +73,6 @@ export async function getInfos(email: any): Promise<User>{
     if(result.length ===0){
         null
     }
+    console.log("get infos result request : ", result)
     return result
 }

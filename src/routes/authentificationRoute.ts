@@ -87,9 +87,29 @@ router.route("/login")
     .post(login)
 router.route("/protectedRoute")
     .get(verifyToken) 
-router.route("/getStatut")
+    /**
+ * @swagger
+* /user/statut/{email}:
+*    get:
+*       summary: Get a user by ID
+*       parameters:
+*        - in: path
+*          name: email
+*          schema:
+*            type: string
+*          required: true
+*          description: récupérer l'email de l'utilisateur
+*       responses:
+*           201:
+*               description: User successfully registered
+*           400:
+*               description: Bad request (missing or invalid fields)
+*           500:
+*               description: Internal server error     
+*/
+router.route("/user/statut")
    .get(getStatutUser)
-router.route("/getInfosByEmail")
+router.route("/user/infosByEmail")
     .get(getInfos)
 
 export default router;
