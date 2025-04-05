@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import { register, test, login,verifyToken} from "../controllers/authentificationController";
-import {getStatutUser} from "../controllers/statutController";
+// import {getStatutUser} from "../controllers/statutController";
 import {getInfos} from "../controllers/settingsController"
 
 router.route("/test")
@@ -107,8 +107,8 @@ router.route("/protectedRoute")
 *           500:
 *               description: Internal server error     
 */
-router.route("/user/statut")
-   .get(getStatutUser)
+// router.route("/user/statut")
+//    .get(getStatutUser)
 router.route("/user/infosByEmail")
     .get(getInfos)
 

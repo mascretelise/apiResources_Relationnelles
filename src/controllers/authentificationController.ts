@@ -4,13 +4,14 @@ import jwt from "jsonwebtoken";
 import logger from '../middleware/loggerWinston'
 import { Request, Response, NextFunction } from "express";
 import * as userAccessor from "../data/accessor/userAccessor"
+import { User } from "~/data/models/user";
 
 
 
 dotenv.config({ path: ".env" });
 declare module "express-serve-static-core" {
   interface Request {
-      user?: any;
+      user?: User;
   }
 }
 if (!process.env.JWT_SECRET_KEY) {
@@ -109,7 +110,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const decoded = jwt.verify(token, jwtSecretKey);
-    req.user = decoded;
+    req.body.user = decoded;
     
     next(); 
     res.status(200).json({message: "Accès autorisé"})
