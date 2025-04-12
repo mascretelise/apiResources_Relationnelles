@@ -74,12 +74,22 @@ export async function getStatutUser(email: string): Promise<any>{
 }
 
 export async function getInfos(email: string): Promise<User>{
-    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password, uti_statut FROM utilisateurs WHERE uti_email=?";
+    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_statut FROM utilisateurs WHERE uti_email=?";
     const result = await conn.execute(request, [email])
     if(result.length ===0){
         null
     }
-    console.log("get infos result request : ", result)
+    return result
+}
+
+export async function formModif(email: string, user : { lastName: string; firstName: string; pseudo: string }): Promise<User>{
+    const request = "UPDATE utilisateurs SET uti_name = ?, uti_firstname = ? , uti_pseudonyme = ? WHERE uti_email = ?";
+    const result = await conn.execute(request, [user.lastName,
+        user.firstName, user.pseudo, email])
+    console.log("result modif infos : ", result)
+    if(result.length ===0){
+        null
+    }
     return result
 }
 

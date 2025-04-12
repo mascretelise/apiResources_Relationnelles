@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import logger from '../middleware/loggerWinston'
 import { Request, Response, NextFunction } from "express";
 import * as userAccessor from "../data/accessor/userAccessor"
@@ -121,4 +121,17 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const infos = userAccessor.getUserByEmail(email)
 }
 */
-export { test, register, login, verifyToken};
+async function emailByToken(req:Request, res:Response) {
+  const jwtSecretKey = process.env.JWT_SECRET_KEY as string;
+       const token = req.cookies.token as string;
+        console.log("cookie token " , req.cookies.token); 
+          if (!token) {
+               res.status(403).json({ error: "Accès refusé, pas de token" });
+          }
+      
+          const decoded = jwt.verify(token, jwtSecretKey)as JwtPayload;
+          req.body.user = decoded;
+      const param = decoded.email
+      res.json({email : param})
+}
+export { test, register, login, verifyToken, emailByToken};

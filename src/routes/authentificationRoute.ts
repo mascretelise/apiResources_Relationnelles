@@ -1,9 +1,9 @@
 import express from "express";
 const router = express.Router();
 
-import { register, test, login,verifyToken} from "../controllers/authentificationController";
+import { register, test, login,verifyToken, emailByToken} from "../controllers/authentificationController";
 // import {getStatutUser} from "../controllers/statutController";
-import {getInfos} from "../controllers/settingsController"
+import {getModifInfos, getInfos} from "../controllers/settingsController"
 
 router.route("/test")
     .get(test);
@@ -112,4 +112,9 @@ router.route("/protectedRoute")
 router.route("/user/infosByEmail")
     .get(getInfos)
 
+router.route("/user/emailByToken")
+        .get(emailByToken)
+
+router.route("/user/modifInfos")
+        .post(getModifInfos)
 export default router;
