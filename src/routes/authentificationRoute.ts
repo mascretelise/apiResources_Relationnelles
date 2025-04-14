@@ -55,7 +55,7 @@ router.route("/register")
  * @swagger
  * /login:
  *   post:
- *     summary: Register a new user
+ *     summary: login
  *     description: Creates a new user account with the provided information.
  *     requestBody:
  *       required: true
@@ -85,10 +85,9 @@ router.route("/register")
  */
 router.route("/login")
     .post(login)
-router.route("/protectedRoute")
-    .get(verifyToken) 
-    /**
- * @swagger
+
+/**
+* @swagger
 * /user/statut/{email}:
 *    get:
 *       summary: Get a user by ID
@@ -112,8 +111,62 @@ router.route("/protectedRoute")
 router.route("/user/infosByEmail")
     .get(getInfos)
 
+/**
+* @swagger
+* /user/emailByToken:
+*    get:
+*       summary: get email by Token
+*       responses:
+*           201:
+*               description: User successfully registered
+*           400:
+*               description: Bad request (missing or invalid fields)
+*           500:
+*               description: Internal server error     
+*/
 router.route("/user/emailByToken")
         .get(emailByToken)
+
+/**
+ * @swagger
+ * /user/modifInfos:
+ *   post:
+ *     summary: Modify user information by email
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Email of the user to modify
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - lastName
+ *               - firstName
+ *               - pseudo
+ *             properties:
+ *               lastName:
+ *                 type: string
+ *                 example: "doe"
+ *               firstName:
+ *                 type: string
+ *                 example: "john"
+ *               pseudo:
+ *                 type: string
+ *                 example: "johndoedu08"
+ *     responses:
+ *       201:
+ *         description: User successfully updated
+ *       400:
+ *         description: Bad request (missing or invalid fields)
+ *       500:
+ *         description: Internal server error
+ */
 
 router.route("/user/modifInfos")
         .post(getModifInfos)
