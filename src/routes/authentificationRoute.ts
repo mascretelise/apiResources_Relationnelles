@@ -56,7 +56,7 @@ router.route("/register")
  * /login:
  *   post:
  *     summary: login
- *     description: Creates a new user account with the provided information.
+ *     description: login user
  *     requestBody:
  *       required: true
  *       content:
