@@ -14,8 +14,10 @@ const jwtSecretKey = process.env.JWT_SECRET_KEY as string;
 
 export const createRessource = async (req: Request, res: Response): Promise<void> => {
   try {
-    
-    const token = req.cookies.token;
+    const cookieToken = req.cookies?.token;
+    const headerToken = req.headers['authorization']?.split(' ')[1];
+
+    const token = cookieToken || headerToken;
 
     if (!token) {
       res.status(403).json({ error: "Accès refusé, pas de token" });
@@ -70,7 +72,10 @@ export const getRecentRessources = async (req: Request, res: Response): Promise<
 
 export const getUserHistory = async (req: Request, res: Response): Promise<void> => {
   try {
-    const token = req.cookies.token;
+    const cookieToken = req.cookies?.token;
+    const headerToken = req.headers['authorization']?.split(' ')[1];
+
+    const token = cookieToken || headerToken;
     const decoded = jwt.verify(token, jwtSecretKey) as JwtPayload;
     const email = decoded.email;
 
