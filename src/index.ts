@@ -9,7 +9,6 @@ import cookieParser from "cookie-parser";
 import { setupSwagger } from "../swagger";
 
 
-
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -42,6 +41,10 @@ import authentificationRoutes from "./routes/authentificationRoute";
 
 app.use("/api", authentificationRoutes);
 // app.use("/api/user", userRoutes);
+
+import ressourcesRoute from "./routes/ressourcesRoute";
+app.use("/api", ressourcesRoute);
+
 setupSwagger(app);
 
 export default app;

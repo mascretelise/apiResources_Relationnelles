@@ -25,11 +25,12 @@ const test = async (req:Request, res:Response): Promise<any> => {
 const register = async (req:Request, res:Response) => {
 //   res.set("Access-Control-Allow-Origin", "http://localhost:3001");
   try {
+    
     const newuser = {
       lastName: req.body.lastName,
       firstName: req.body.firstName,
       email: req.body.email,
-      hash: await bcrypt.hash(req.body.mdp, 10),
+      hash: await bcrypt.hash(req.body.password, 10),
     };
 
     const createuser = await userAccessor.createUser(newuser);
@@ -61,7 +62,7 @@ const register = async (req:Request, res:Response) => {
 
     
   } catch (error:any) {
-    
+    console.error("Erreur complète :", error)
     if (error.code == "ER_DUP_ENTRY") {
       logger.warn('Compte déjà connu');
       res
@@ -78,6 +79,7 @@ const register = async (req:Request, res:Response) => {
 const login = async (req:Request, res:Response) : Promise<any> => {
   
 try {
+      console.log("REQ BODY", req.body)
       const { email, mdp } = req.body
 
       const result = await userAccessor.loginUser(email)
