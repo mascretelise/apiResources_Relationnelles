@@ -4,6 +4,7 @@ const router = express.Router();
 import { register, test, login,verifyToken, emailByToken} from "../controllers/authentificationController";
 // import {getStatutUser} from "../controllers/statutController";
 import {getModifInfos, getInfos} from "../controllers/settingsController"
+import { uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
 
 router.route("/test")
     .get(test);
@@ -170,4 +171,6 @@ router.route("/user/emailByToken")
 
 router.route("/user/modifInfos")
         .post(getModifInfos)
+router.route("/user/iconeProfil")
+        .post(uploadIconeProfil.single('icone'))
 export default router;

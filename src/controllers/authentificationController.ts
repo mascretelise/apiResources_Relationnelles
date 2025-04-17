@@ -36,12 +36,16 @@ const register = async (req:Request, res:Response) => {
     if(createuser){
       const email = newuser.email
       const user = {email}
-        const token = jwt.sign(user, jwtSecretKey, { expiresIn: "1h" });
+      const token = jwt.sign(user, jwtSecretKey, { expiresIn: "1h" });
   
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", 
-        });
+      res
+      .cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 24 * 60 * 60 * 1000
+      })
+      .json({ token });
+        
       res.status(201).json({
       message: "Utilisateur inscrit avec succès.",
     });
@@ -89,11 +93,13 @@ try {
       console.log("user : ", payload)
       const token = jwt.sign(payload, jwtSecretKey);
       
-      res.cookie("token", token, {
+      res
+        .cookie("token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production", 
+          secure: process.env.NODE_ENV === "production",
           maxAge: 24 * 60 * 60 * 1000
-      });
+        })
+        .json({ token });
       return res.status(200).json({message: "utilisateur connecté"})
 
     } catch (error) {
