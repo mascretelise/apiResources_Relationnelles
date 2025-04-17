@@ -30,7 +30,7 @@ export const createRessource = async (req: Request, res: Response): Promise<void
 
     // champs mandatory : nom & catégorie
     if (!res_nom || !cat_categorie) {
-      res.status(400).json({ error: "Tous les champs doivent être fournis." });
+      res.status(400).json({ error: "Les champs nom et catégorie doivent être fournis." });
       return;
     }
 
@@ -55,5 +55,28 @@ export const createRessource = async (req: Request, res: Response): Promise<void
   } catch (error) {
     console.error("Erreur lors de la création de la ressource", error);
     res.status(500).json({ error: "Erreur serveur lors de la création de la ressource"});
+  }
+};
+
+export const getRecentRessources = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const ressources = await ressourcesAccessor.getRecentRessources();
+    res.status(200).json(ressources);
+  } catch (error) {
+    console.log("Error : " + error)
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+};
+
+export const getUserHistory = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, jwtSecretKey) as JwtPayload;
+    const email = decoded.email;
+
+    const historique = await ressourcesAccessor.getUserHistory(email);
+    res.status(200).json(historique);
+  } catch (error) {
+    res.status(500).json({ error: "Erreur serveur" });
   }
 };
