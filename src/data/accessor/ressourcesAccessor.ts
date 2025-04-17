@@ -12,3 +12,15 @@ export const createRessource = async (ressource: { res_nom: string, com_commenta
   ]);
   return result;
 };
+
+export const getRecentRessources = async () => {
+  const query = `SELECT * FROM ressource ORDER BY res_urid DESC LIMIT 5`;
+  const result = await conn.query(query);
+  return result;
+};
+
+export const getUserHistory = async (userEmail: string) => {
+  const query = `SELECT * FROM ressource WHERE res_auteur = ? ORDER BY res_urid DESC LIMIT 5`;
+  const result = await conn.query(query, [userEmail]);
+  return result;
+};
