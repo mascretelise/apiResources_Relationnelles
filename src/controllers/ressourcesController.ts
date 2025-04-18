@@ -28,20 +28,22 @@ export const createRessource = async (req: Request, res: Response): Promise<void
     const decoded = jwt.verify(token, jwtSecretKey) as JwtPayload;
     const userEmail = decoded.email; 
 
-    const { res_nom, com_commentaire, res_extension, cat_categorie } = req.body;
+    const { res_nom, com_commentaire, res_extension, cat_categorie, res_lien, res_description } = req.body;
 
     // champs mandatory : nom & catégorie
-    if (!res_nom || !cat_categorie) {
-      res.status(400).json({ error: "Les champs nom et catégorie doivent être fournis." });
+    if (!res_nom || !cat_categorie || !res_lien) {
+      res.status(400).json({ error: "Les champs nom, catégorie et lien doivent être fournis." });
       return;
     }
 
-    const result = await ressourcesAccessor.createRessource({
+    const result = await ressourcesAccessor.createRessource({ 
       res_nom,
       com_commentaire,
       res_extension,
       res_auteur: userEmail, 
-      cat_categorie
+      cat_categorie,
+      res_lien,
+      res_description
     });
 
     if (result.insertId) {
