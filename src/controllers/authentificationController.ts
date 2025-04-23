@@ -45,7 +45,7 @@ const register = async (req:Request, res:Response) => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 24 * 60 * 60 * 1000
       })
-      .json({ token });
+      .header({ token: token });
         
       res.status(201).json({
       message: "Utilisateur inscrit avec succès.",
@@ -79,30 +79,27 @@ const register = async (req:Request, res:Response) => {
 const login = async (req:Request, res:Response) : Promise<any> => {
   
 try {
-      console.log("REQ BODY", req.body)
       const { email, mdp } = req.body
 
       const result = await userAccessor.loginUser(email)
       const mdpCompare = await userAccessor.compareMdp(mdp, email);
-      console.log("result : ", result)
-      console.log("mdp compare : ", mdpCompare)
-      
+
       if (!mdpCompare || !result) {
         return res.status(401).json({ message: "Email ou mot de passe incorrect" });
       }
       //passer l'id 
       const payload = {"email" : email}
-      console.log("user : ", payload)
       const token = jwt.sign(payload, jwtSecretKey);
-      
-      res
-        .cookie("token", token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          maxAge: 24 * 60 * 60 * 1000
-        })
-        .json({ token });
-      return res.status(200).json({message: "utilisateur connecté"})
+
+       return res
+       .status(200)
+       .cookie("token", token, {
+         httpOnly: true,
+         secure: process.env.NODE_ENV === "production",
+         maxAge: 24 * 60 * 60 * 1000
+       })
+       .header({token: token})
+       .json({message: "utilisateur connecté"});
 
     } catch (error) {
       logger.debug('Erreur Serveur');
@@ -112,7 +109,6 @@ try {
 
 const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
-  console.log(req.cookies.token); // Récupérer le token depuis les cookies
     if (!token) {
          res.status(403).json({ error: "Accès refusé, pas de token" });
     }
@@ -132,7 +128,6 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 async function emailByToken(req:Request, res:Response) {
   const jwtSecretKey = process.env.JWT_SECRET_KEY as string;
        const token = req.cookies.token as string;
-        console.log("cookie token " , req.cookies.token); 
           if (!token) {
                res.status(403).json({ error: "Accès refusé, pas de token" });
           }

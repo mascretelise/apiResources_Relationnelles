@@ -47,4 +47,6 @@ app.use("/api", ressourcesRoute);
 
 setupSwagger(app);
 
+//Centraliser les erreurs grâce à express. 
+
 export default app;

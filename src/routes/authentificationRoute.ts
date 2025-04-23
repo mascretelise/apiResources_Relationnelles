@@ -4,7 +4,7 @@ const router = express.Router();
 import { register, test, login,verifyToken, emailByToken} from "../controllers/authentificationController";
 // import {getStatutUser} from "../controllers/statutController";
 import {getModifInfos, getInfos} from "../controllers/settingsController"
-import { uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
+import { getUrlIcone, postUrlIcone, uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
 
 router.route("/test")
     .get(test);
@@ -172,5 +172,11 @@ router.route("/user/emailByToken")
 router.route("/user/modifInfos")
         .post(getModifInfos)
 router.route("/user/iconeProfil")
-        .post(uploadIconeProfil.single('icone'))
+        .post(uploadIconeProfil.single('file'), (req, res) => {
+            res.json({ message: 'Image uploaded successfully' });
+        });
+router.route("/urlIconeProfil")
+        .post(postUrlIcone)
+router.route("/urlIconeByEmail")
+        .get(getUrlIcone)
 export default router;

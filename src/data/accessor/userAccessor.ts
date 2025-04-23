@@ -24,7 +24,6 @@ export async function loginUser (email: string): Promise<any>{
 
 export async function compareMdp (mdp: string, email: string): Promise<boolean>{
     let mdpHash = await getUserByEmail(email)
-    console.log("mdp Hash : ", mdpHash)
     if (!mdpHash.uti_password) {
         return false;
     }
@@ -55,12 +54,11 @@ export async function getStatutUser(email: any): Promise<any>{
     if(rows === 0){
         return null
     }
-    console.log(rows)
     return rows[0]
 }
 
 export async function getInfos(email: any): Promise<User>{
-    const request = "SELECT uti_email, uti_name, uti_firstname, uti_pseudonyme, uti_password FROM utilisateurs WHERE uti_email=?";
+    const request = "SELECT uti_email, uti_name, uti_firstname, uti_statut, uti_pseudonyme, uti_password FROM utilisateurs WHERE uti_email=?";
     const result = await conn.execute(request, [email])
     if(result.length ===0){
         null

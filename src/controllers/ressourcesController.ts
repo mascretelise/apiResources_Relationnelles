@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import * as ressourcesAccessor from "../data/accessor/ressourcesAccessor";
+import { error } from "node:console";
 
 // Sérialisation personnalisée pour BigInt : sinon ça trigger une erreur au moment de l'insert
 const bigIntReviver = (key: string, value: any) => {
@@ -70,11 +71,14 @@ export const getRecentRessources = async (req: Request, res: Response): Promise<
   }
 };
 
-export const getUserHistory = async (req: Request, res: Response): Promise<void> => {
+export const getUserHistory = async (req: Request, res: Response, next :NextFunction): Promise<void> => {
   try {
     const cookieToken = req.cookies?.token;
     const headerToken = req.headers['authorization']?.split(' ')[1];
-
+    if(!cookieToken || !headerToken){
+      res.status(400).json({error: "Token manquant"})
+      next(400)
+    }
     const token = cookieToken || headerToken;
     const decoded = jwt.verify(token, jwtSecretKey) as JwtPayload;
     const email = decoded.email;
@@ -82,6 +86,8 @@ export const getUserHistory = async (req: Request, res: Response): Promise<void>
     const historique = await ressourcesAccessor.getUserHistory(email);
     res.status(200).json(historique);
   } catch (error) {
+    console.error(error);
+    //Erreur pour le token invalide 
     res.status(500).json({ error: "Erreur serveur" });
   }
 };

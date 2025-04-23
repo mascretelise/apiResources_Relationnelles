@@ -22,16 +22,14 @@ const getModifInfos = async (req:Request, res:Response) : Promise<any> => {
   
     try {
           const email = req.query.email as string;
-          console.log("email modif infos : ", email)
           const user = {
             lastName: req.body.lastName,
             firstName: req.body.firstName,
             pseudo: req.body.pseudo
            } 
-           
-           console.log("user modif info :", user)
+
           const result = await userAccessor.formModif(email,user)
-          console.log("result modif infos : ", result)
+
           
           return res.status(200).json({message: "utilisateur connecté"})
     

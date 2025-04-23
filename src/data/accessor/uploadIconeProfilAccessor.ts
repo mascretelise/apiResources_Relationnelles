@@ -3,23 +3,19 @@ require('dotenv').config();
 import { S3 } from '@aws-sdk/client-s3';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
+import conn from '../connector/connect';
 
-AWS.config.update({
-    region: process.env.AWS_REGION,
-    accessKeyId: process.env.ACCESS_KEY,
-    secretAccessKey: process.env.SECRET_KEY
-});
+export async function postUrlBDD(url:string, email:string){
+    const request =  "UPDATE utilisateurs SET uti_iconeProfil = ? WHERE uti_email = ?";
+    const result = await conn.execute(request,[url, email]);
+    console.log("result : ", result)
+    return result
 
-const s3 = new AWS.S3();
+}
 
-const upload = multer({
-    storage: multerS3({
-        s3: s3 as any,
-        bucket: process.env.AWS_BUCKET_NAME as string,
-        key: function (req, file, cb){
-            cb(null, ''+ file.originalname);
-        },
-    }),
-});
-
-export {upload}
+export async function getUrl(email:string){
+    const request = "SELECT uti_iconeProfil FROM utilisateurs WHERE uti_email=?";
+    const result = await conn.execute(request, [email])
+    console.log("result get url : ", result)
+    return result
+}
