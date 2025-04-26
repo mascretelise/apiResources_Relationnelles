@@ -43,8 +43,10 @@ app.use("/api", authentificationRoutes);
 // app.use("/api/user", userRoutes);
 
 import ressourcesRoute from "./routes/ressourcesRoute";
+import settingsRoute from "./routes/settingsRoute";
 app.use("/api", ressourcesRoute);
 
+app.use("/api", settingsRoute)
 setupSwagger(app);
 
 //Centraliser les erreurs grâce à express. 
