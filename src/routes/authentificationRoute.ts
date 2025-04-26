@@ -5,7 +5,17 @@ import { register, test, login,verifyToken, emailByToken} from "../controllers/a
 // import {getStatutUser} from "../controllers/statutController";
 import {getModifInfos, getInfos} from "../controllers/settingsController"
 import { getUrlIcone, postUrlIcone, uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
+import {addCategory, editCategory, removeCategory} from "../controllers/settingsAdminController"
 
+
+
+router.route("/category/addCategorie")
+        .post(addCategory)
+
+router.route("/category/removeCategorie")
+        .post(removeCategory)
+router.route("/category/editCategorie")
+        .post(editCategory)
 router.route("/test")
     .get(test);
 /**
