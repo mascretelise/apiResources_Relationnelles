@@ -22,6 +22,7 @@ router.route("/ressources")
  *             required:
  *               - res_nom
  *               - res_categorie
+ *               - res_lien
  *             properties:
  *               res_nom:
  *                 type: string
@@ -39,6 +40,12 @@ router.route("/ressources")
  *                  type: string
  *                  format: email
  *                  example: "johndoe@example.com"
+ *              res_lien:
+ *                  type: string
+ *                  example: "linkforthefile"
+ *              res_description:
+ *                  type: string
+ *                  example: "une photo"
  *     responses:
  *       201:
  *         description: Ressource créée avec succès
