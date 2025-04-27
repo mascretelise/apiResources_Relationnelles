@@ -1,20 +1,21 @@
 import express from "express";
 const router = express.Router();
 
-import {addCategory, editCategory, removeCategory} from "../controllers/settingsAdminController"
+import {addCategory, editCategory, getCategory, removeCategory} from "../controllers/settingsAdminController"
 import { getUrlIcone, postUrlIcone, uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
 import {getModifInfos, getInfos} from "../controllers/settingsController"
 import { register, test, login,verifyToken, emailByToken} from "../controllers/authentificationController";
 
-
-router.route("/category/addCategorie")
+router.route("/category/readCategory")
+        .get(getCategory)
+router.route("/category/addCategory")
         .post(addCategory)
 
-router.route("/category/removeCategorie")
+router.route("/category/removeCategory")
         .post(removeCategory)
-router.route("/category/editCategorie")
+router.route("/category/editCategory")
         .post(editCategory)
-        router.route("/user/modifInfos")
+router.route("/user/modifInfos")
         .post(getModifInfos)
 router.route("/user/iconeProfil")
         .post(uploadIconeProfil.single('file'), (req, res) => {

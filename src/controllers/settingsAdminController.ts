@@ -54,4 +54,17 @@ const editCategory = async (req:Request, res:Response) =>  {
     }
 }
 
-export {addCategory, removeCategory, editCategory}
+const getCategory = async(req:Request, res:Response) => {
+    try {
+        const result = await settingsAdminAccessor.getCategories();
+        if(!result){
+            res.status(404).json({message: "Aucune catégorie n'as été trouvée"})
+        }
+        console.log("result controller : ", result)
+        res.status(200).json(result)
+    } catch (error) {
+        console.log("error get categorie : ", error)
+    }
+}
+
+export {addCategory, removeCategory, editCategory, getCategory}

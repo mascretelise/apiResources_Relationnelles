@@ -21,3 +21,10 @@ export async function editCategories (category:any, id:number){
     console.log("result edit category accessor : ", result);
     return result
 }
+
+export async function getCategories (){
+    const request = "SELECT * FROM categorie";
+    const result = await conn.execute(request);
+    console.log("result get categories : ", result)
+    return result
+}
