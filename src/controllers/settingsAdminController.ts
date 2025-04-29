@@ -20,9 +20,10 @@ const addCategory = async (req:Request, res:Response) => {
 }
 
 const removeCategory = async (req:Request, res:Response) =>  {
-    
+
     try {
-        const { category } = req.body
+        const category  = req.query.category as string
+        console.log("category remove : ", category)
         const remove = await settingsAdminAccessor.removeCategories(category)
 
     if(!remove){
@@ -40,7 +41,9 @@ const editCategory = async (req:Request, res:Response) =>  {
     
     try {
         const { category } = req.body
-        const {id} = req.body
+        console.log("nouvelle categorie :", category)
+        const id = req.query.id 
+        console.log("id reçu : ", id)
         const edit = await settingsAdminAccessor.editCategories(category, id)
 
     if(!edit){
@@ -60,7 +63,8 @@ const getCategory = async(req:Request, res:Response) => {
         if(!result){
             res.status(404).json({message: "Aucune catégorie n'as été trouvée"})
         }
-        console.log("result controller : ", result)
+        //Renvoyer un tableau 
+       
         res.status(200).json(result)
     } catch (error) {
         console.log("error get categorie : ", error)
