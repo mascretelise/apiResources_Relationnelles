@@ -6,6 +6,12 @@ const addCategory = async (req:Request, res:Response) => {
     
     try {
         const { category } = req.body
+        const verif = await settingsAdminAccessor.getCategoriesByName(category)
+        if(verif){
+            res
+        .status(500)
+        .json({ error: "La catégorie existe déjà" });
+        }
         const add = await settingsAdminAccessor.addCategories(category)
 
     if(!add){
@@ -44,6 +50,12 @@ const editCategory = async (req:Request, res:Response) =>  {
         console.log("nouvelle categorie :", category)
         const id = req.query.id 
         console.log("id reçu : ", id)
+        const verif = await settingsAdminAccessor.getCategoriesByName(category)
+        if(verif){
+            res
+        .status(500)
+        .json({ error: "La catégorie existe déjà" });
+        }
         const edit = await settingsAdminAccessor.editCategories(category, id)
 
     if(!edit){
