@@ -25,13 +25,14 @@ const test = async (req:Request, res:Response): Promise<any> => {
 const register = async (req:Request, res:Response) => {
 //   res.set("Access-Control-Allow-Origin", "http://localhost:3001");
   try {
-    
+    console.log("tutu")
     const newuser = {
       lastName: req.body.lastName,
       firstName: req.body.firstName,
       email: req.body.email,
-      hash: await bcrypt.hash(req.body.password, 10),
+      hash: await bcrypt.hash(req.body.mdp, 10),
     };
+    console.log(newuser.lastName)
 
     const createuser = await userAccessor.createUser(newuser);
     if(createuser){

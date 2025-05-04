@@ -5,7 +5,12 @@ import {addCategory, editCategory, getCategory, removeCategory} from "../control
 import { getUrlIcone, postUrlIcone, uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
 import {getModifInfos, getInfos} from "../controllers/settingsController"
 import { register, test, login,verifyToken, emailByToken} from "../controllers/authentificationController";
+import { editStatutAccounts, getAllAccounts } from "~/controllers/settingsSuperAdmin";
 
+router.route("/user/editAccounts")
+        .post(editStatutAccounts)
+router.route("/user/allAccounts")
+        .get(getAllAccounts)
 router.route("/category/readCategory")
         .get(getCategory)
 router.route("/category/addCategory")

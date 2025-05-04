@@ -39,9 +39,6 @@ export async function getUserByEmail(email: any): Promise<any>{
     try {
         const [rows] = await conn.execute(request, [email]);
         
-        if (rows.length === 0) {
-            return null;
-        }
         return rows;
     } catch (error) {
         throw new Error("Erreur lors de la récupération de l'utilisateur");
