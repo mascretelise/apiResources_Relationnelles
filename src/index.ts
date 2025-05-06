@@ -1,12 +1,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config({ path: '.env' });
 import bodyParser from "body-parser";
-const app = express();
 import { Request, Response} from 'express';
 import cookieParser from "cookie-parser";
 import { setupSwagger } from "../swagger";
+
+dotenv.config({ path: '.env' });
+
+const app = express();
 
 
 app.use(cookieParser());

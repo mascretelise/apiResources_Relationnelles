@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import * as ressourcesAccessor from "../data/accessor/ressourcesAccessor";
+const {S3} = require('@aws-sdk/client-s3');
+
+const express = require('express');
+const AWS = require('aws-sdk');
+const cors = require('cors')
 
 // Sérialisation personnalisée pour BigInt : sinon ça trigger une erreur au moment de l'insert
 const bigIntReviver = (key: string, value: any) => {
