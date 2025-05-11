@@ -25,4 +25,4 @@ export const getUserHistory = async (userEmail: string) => {
   const query = `SELECT * FROM ressource WHERE res_auteur = ? ORDER BY res_urid DESC LIMIT 5`;
   const result = await conn.query(query, [userEmail]);
   return result;
-};
+}

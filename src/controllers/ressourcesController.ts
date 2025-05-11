@@ -92,4 +92,4 @@ export const getUserHistory = async (req: Request, res: Response, next :NextFunc
     //Erreur pour le token invalide 
     res.status(500).json({ error: "Erreur serveur" });
   }
-};
+}
