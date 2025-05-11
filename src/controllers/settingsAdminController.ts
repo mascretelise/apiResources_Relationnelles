@@ -83,4 +83,36 @@ const getCategory = async(req:Request, res:Response) => {
     }
 }
 
-export {addCategory, removeCategory, editCategory, getCategory}
+const suspendAccount =  async (req:Request, res:Response) => {
+console.log("kiki")
+    const uti_uuid = req.query.id as string;
+    const uti_suspendu = req.body.suspendu;
+    console.log("uti_uuid : ", uti_uuid)
+    console.log("uti_suspendu : ", uti_suspendu)
+    const result = await settingsAdminAccessor.suspendAccountByEmail(uti_suspendu, uti_uuid)
+    if(!result){
+        res.status(403).json({message: "L'update n'a pas eu lieu"})
+    }
+    res.status(200).json({message: "L'update du compte a bien eu lieu"})
+}
+const arraySuspendu: { [key: string]: string } = {
+    0: "Actif",
+    1: "Suspendu"
+  };
+const readAccount = async(req:Request, res:Response)=>{
+    const getAccounts = await settingsAdminAccessor.getAccountsAdmin();
+    
+      if (!getAccounts || getAccounts.length === 0) {
+         res.status(500).json({ error: "Les comptes n'ont pas été importés" });
+      }
+    
+      const result = getAccounts.map((account: { uti_suspendu: string | number }) => ({
+        ...account,
+        suspendu: arraySuspendu[Number(account.uti_suspendu)] || 'inconnu', // Conversion explicite en nombre
+      }));
+    
+       res.status(200).json(result);
+}
+
+
+export {addCategory, removeCategory, editCategory, getCategory, suspendAccount,readAccount}

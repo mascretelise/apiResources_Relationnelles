@@ -1,10 +1,8 @@
 import express from "express";
 const router = express.Router();
 
-import { register, test, login,verifyToken, emailByToken} from "../controllers/authentificationController";
-// import {getStatutUser} from "../controllers/statutController";
-import {getModifInfos, getInfos} from "../controllers/settingsController"
-import { getUrlIcone, postUrlIcone, uploadIconeProfil } from "~/controllers/uploadIconeProfilController";
+import { register, test, login,verifyToken, deleteToken} from "../controllers/authentificationController";
+
 
 router.route("/test")
     .get(test);
@@ -66,13 +64,13 @@ router.route("/register")
  *             type: object
  *             required:
  *               - email
- *               - password
+ *               - mdp
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
  *                 example: "johndoe@example.com"
- *               password:
+ *               mdp:
  *                 type: string
  *                 format: password
  *                 example: "azerY123!"
@@ -129,6 +127,9 @@ router.route("/login")
  *       500:
  *         description: Internal server error
  */
-
+router.route("/user/logout")
+    .post(deleteToken)
+router.route("/user/verifyToken")
+    .post(verifyToken)
 
 export default router;

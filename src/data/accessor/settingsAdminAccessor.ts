@@ -48,3 +48,22 @@ export async function getCategoriesByName(cat_nom:any){
     }
     return result
 }
+
+export async function suspendAccountByEmail(uti_suspendu: boolean, uti_uuid:string){
+    const request = "UPDATE utilisateurs SET uti_suspendu = ? WHERE uti_uuid = ?"
+    const result = await conn.execute(request,[uti_suspendu, uti_uuid])
+    if(result.length === 0){
+        return null
+    }
+    return result
+}
+
+export async function getAccountsAdmin (){
+    const request = "SELECT uti_uuid, uti_name, uti_firstname, uti_email, uti_suspendu FROM utilisateurs";
+    const result = await conn.execute(request)
+    if(result.length === 0){
+        return null
+    }
+    console.log("result getAccounts accessor : ", result)
+    return result
+}

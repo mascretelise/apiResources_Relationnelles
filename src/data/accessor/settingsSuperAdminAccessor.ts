@@ -11,7 +11,7 @@ export async function getAccountsSuperAdmin (){
     return result
 }
 
-export async function editStatut (uti_uuid: any, statut:string){
+export async function editStatut (uti_uuid: string, statut:string){
     const request = "UPDATE utilisateurs SET uti_statut = ? WHERE uti_uuid = ?";
     const result = await conn.execute(request, [statut, uti_uuid])
     if(result.length === 0){

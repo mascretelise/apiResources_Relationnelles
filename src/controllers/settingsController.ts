@@ -30,7 +30,6 @@ const getModifInfos = async (req:Request, res:Response) : Promise<any> => {
 
           const result = await userAccessor.formModif(email,user)
 
-          
           return res.status(200).json({message: "utilisateur connecté"})
     
         } catch (error) {

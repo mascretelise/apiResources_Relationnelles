@@ -6,8 +6,12 @@ import bodyParser from "body-parser";
 const app = express();
 import { Request, Response} from 'express';
 import cookieParser from "cookie-parser";
+import ressourcesRoute from "./routes/ressourcesRoute";
+import settingsRoute from "./routes/settingsRoute";
+import authentificationRoutes from "./routes/authentificationRoute";
 import { setupSwagger } from "../swagger";
 
+setupSwagger(app);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -21,7 +25,7 @@ app.use(
     allowedHeaders: "Content-Type,Authorization",
   })
 );
-//   res.set("Access-Control-Allow-Origin", process.env.FRONT_URL);
+
 
 app.get("/", (req:Request, res:Response) => {
   res
@@ -36,19 +40,15 @@ app.listen(process.env.API_PORT, () => {
   console.log(`Serveur lancé sur http://localhost:${process.env.API_PORT}`);
 });
 
-import authentificationRoutes from "./routes/authentificationRoute";
-// import userRoutes from "./routes/userRoute.js";
+
+
 
 app.use("/api", authentificationRoutes);
-// app.use("/api/user", userRoutes);
 
-import ressourcesRoute from "./routes/ressourcesRoute";
-import settingsRoute from "./routes/settingsRoute";
+
 app.use("/api", ressourcesRoute);
 
 app.use("/api", settingsRoute)
-setupSwagger(app);
 
-//Centraliser les erreurs grâce à express. 
 
 export default app;
