@@ -98,4 +98,4 @@ router.route("/ressources/historique")
  *         description: Erreur serveur
  */
 
-export default router;
+export default router
