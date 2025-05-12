@@ -7,7 +7,7 @@ import * as uploadIconeProfilAccessor from "../data/accessor/uploadIconeProfilAc
 import { emailByToken } from './authentificationController';
 
 const s3Client = new S3Client({
-    region: process.env.AWS_REGION as string, // Replace with your preferred region
+    region: process.env.AWS_REGION as string,
     credentials: {
       accessKeyId: process.env.ACCESS_KEY as string,
       secretAccessKey: process.env.SECRET_KEY as string,

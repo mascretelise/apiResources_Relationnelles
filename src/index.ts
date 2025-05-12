@@ -5,6 +5,9 @@ import bodyParser from "body-parser";
 import { Request, Response} from 'express';
 import cookieParser from "cookie-parser";
 import { setupSwagger } from "../swagger";
+import uploadRoutes from './routes/uploadRoute';
+import ressourcesRoute from "./routes/ressourcesRoute";
+import authentificationRoutes from "./routes/authentificationRoute";
 
 dotenv.config({ path: '.env' });
 
@@ -38,14 +41,14 @@ app.listen(process.env.API_PORT, () => {
   console.log(`Serveur lancé sur http://localhost:${process.env.API_PORT}`);
 });
 
-import authentificationRoutes from "./routes/authentificationRoute";
 // import userRoutes from "./routes/userRoute.js";
 
 app.use("/api", authentificationRoutes);
 // app.use("/api/user", userRoutes);
 
-import ressourcesRoute from "./routes/ressourcesRoute";
 app.use("/api", ressourcesRoute);
+
+app.use('/api', uploadRoutes);
 
 setupSwagger(app);
 
